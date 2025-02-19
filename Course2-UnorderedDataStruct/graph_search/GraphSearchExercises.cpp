@@ -50,7 +50,7 @@ int GridGraph::countEdges() const {
   int numEdges = 0;
 
   // =======================================================================
-  // TODO: Your code here!
+  // DONE: Your code here!
   // =======================================================================
   std::unordered_set<IntPairPair> edgeSet;
   std::unordered_set<IntPair> isolatedPointSet;
@@ -119,7 +119,7 @@ void GridGraph::removePoint(const IntPair& p1) {
   const GridGraph::NeighborSet originalNeighbors = adjacencyMap.at(p1);
 
   // =======================================================================
-  // TODO: Your code here!
+  // DONE: Your code here!
   // =======================================================================
   // std::unordered_map<IntPair, GridGraph::NeighborSet> adjacencyMap;
 
@@ -127,15 +127,14 @@ void GridGraph::removePoint(const IntPair& p1) {
   {
     removeEdge(neighbor, p1);
   }
-    
-
+  
   // Finally, for the one point we are removing, erase the point key itself
   // from adjacencyMap directly. (There is no other GridGraph helper function
   // for this, because that's what we're implementing right now! We need to
   // use adjacencyMap's own erase function directly to erase the key.)
 
   // =======================================================================
-  // TODO: Your code here!
+  // DONE: Your code here!
   // =======================================================================
   adjacencyMap.erase(p1);
 }
@@ -329,18 +328,22 @@ std::list<IntPair> graphBFS(const IntPair& start, const IntPair& goal, const Gri
     }
 
     // =====================================================================
-    // TODO: Your code here!
+    // DONE: Your code here!
     // We'll need to loop over the neighbors that are the points adjacent to curPoint.
     // Get a copy of the set of neighbors we're going to loop over.
-    GridGraph::NeighborSet neighbors; // Change this...
+    GridGraph::NeighborSet neighbors = graph.adjacencyMap.at(curPoint); // Change this...
     // =====================================================================
 
     for (auto neighbor : neighbors) {
 
       // ==================================================================
-      // TODO: Your code here!
+      // DONE: Your code here!
       // Check whether the neighbor has already been visited.
-      bool neighborWasAlreadyVisited = false; // Change this...
+      bool neighborWasAlreadyVisited = false;
+      if (visitedSet.count(neighbor)) 
+      {
+        neighborWasAlreadyVisited = true;
+      }
       // ==================================================================
 
       // If this adjacent vertex has NOT been visited before, we will visit it now.
@@ -349,19 +352,19 @@ std::list<IntPair> graphBFS(const IntPair& start, const IntPair& goal, const Gri
       if (!neighborWasAlreadyVisited) {
 
         // ================================================================
-        // TODO: Your code here!
+        // DONE: Your code here!
 
         // Record that the curPoint is the predecessor of the neighbor point,
         // since curPoint has just led to the discovery of this neighbor for
         // the first time.
-        // ...
-
+        //  Example usage: "pred[B] = A" records A as the predecessor of B, meaning that A discovered B.
+        pred[neighbor] = curPoint;
         // Add neighbor to the visited set.
         // ...
-
+        visitedSet.insert(neighbor);
         // Push neighbor into the exploration queue.
         // ...
-
+        exploreQ.push(neighbor);
         // ================================================================
 
         // Check if we've taken too many steps so far.
