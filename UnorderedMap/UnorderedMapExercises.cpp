@@ -56,7 +56,17 @@ StringIntMap makeWordCounts(const StringVec& words) {
   // =================================================
   // EXERCISE 1 WORKSPACE: YOUR CODE HERE
   // =================================================
+  // StringIntMap -> std::unordered_map<std::string, int>;
 
+  for (std::string word : words) 
+  {
+    if (wordcount_map.count(word) == 0)
+    {
+      wordcount_map[word] = 1;
+    } else {
+      wordcount_map[word]++;
+    }
+  }
   return wordcount_map;
 }
 
@@ -100,8 +110,13 @@ int lookupWithFallback(const StringIntMap& wordcount_map, const std::string& key
   // =================================================
   // EXERCISE 2 WORKSPACE: YOUR CODE HERE
   // =================================================
-
-  return -1337; // Change this!
+  int mapped_val;
+  try {
+      mapped_val = wordcount_map.at(key);
+  } catch (const std::out_of_range& e) {
+    return fallbackVal;
+  }
+  return mapped_val;
 }
 
 
@@ -208,13 +223,14 @@ int memoizedLongestPalindromeLength(LengthMemo& memo, const std::string& str, in
 
     // ====================================================================
     // EXERCISE 3 - PART A - YOUR CODE HERE!
-
+    
     // We've calculated this subproblem before, and that's why there's a key
     // for it in the memoization table already. We won't calculate anything
     // new in this case. So, we also won't store anything new in the table in
     // this case, only return what's already stored at this key in the map.
 
-    return -1337; // Hint: You need to change this!
+    return memo.at(pairKey);
+
     // ====================================================================
 
   }
@@ -321,7 +337,8 @@ int memoizedLongestPalindromeLength(LengthMemo& memo, const std::string& str, in
   // =======================================================================
   // EXERCISE 3 - PART B - YOUR CODE HERE!
   //
-  return -1337; // Hint: You need to change this!
+  memo[pairKey] = greaterResult;
+  return greaterResult; // Hint: You need to change this!
   // =======================================================================
 }
 
