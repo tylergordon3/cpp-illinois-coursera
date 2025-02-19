@@ -52,8 +52,37 @@ int GridGraph::countEdges() const {
   // =======================================================================
   // TODO: Your code here!
   // =======================================================================
+  std::unordered_set<IntPairPair> edgeSet;
+  std::unordered_set<IntPair> isolatedPointSet;
 
-  return numEdges;
+  // Loop over key-value pairs
+  for (const auto& kv : adjacencyMap) {
+    // key: point
+    const auto& p1 = kv.first;
+    // value: neighbor point set
+    const auto& p1_neighbors = kv.second;
+
+    // Points that have no adjacencies are isolated points, with no incident edges.
+    if (p1_neighbors.empty()) {
+      isolatedPointSet.insert(p1);
+    }
+    // insert all the edges found into the set of edges.
+    // std::unordered_set only stores one element per key inserted,
+    // For any points A and B, the edge (A,B) is the same as the edge (B,A). 
+    else {
+      for (const auto& p2 : p1_neighbors) {
+        IntPairPair edge;
+        if (p1 < p2) {
+          edge = std::make_pair(p1,p2);
+        }
+        else {
+          edge = std::make_pair(p2,p1);
+        }
+        edgeSet.insert(edge);
+      }
+    }
+  }
+  return edgeSet.size();
 }
 
 // GridGraph::removePoint:
@@ -92,6 +121,13 @@ void GridGraph::removePoint(const IntPair& p1) {
   // =======================================================================
   // TODO: Your code here!
   // =======================================================================
+  // std::unordered_map<IntPair, GridGraph::NeighborSet> adjacencyMap;
+
+  for (IntPair neighbor : originalNeighbors)
+  {
+    removeEdge(neighbor, p1);
+  }
+    
 
   // Finally, for the one point we are removing, erase the point key itself
   // from adjacencyMap directly. (There is no other GridGraph helper function
@@ -101,6 +137,7 @@ void GridGraph::removePoint(const IntPair& p1) {
   // =======================================================================
   // TODO: Your code here!
   // =======================================================================
+  adjacencyMap.erase(p1);
 }
 
 // =========================================================================
