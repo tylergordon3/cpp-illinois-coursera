@@ -26,6 +26,7 @@
 #include <iostream>
 #include <string>
 
+
 // This is the provided GenericTree class. You can study the header file
 // liner notes for additional tips and information about the assignment.
 #include "GenericTree.h"
@@ -97,7 +98,14 @@ static void treeFactory(GenericTree<int>& tree) {
   // when you print it out. The main() function runs that test for you.
 
   // ...
-
+  tree.clear();
+  tree.createRoot(4);
+  tree.getRootPtr()->addChild(8);
+  tree.getRootPtr()->childrenPtrs[0]->addChild(16);
+  tree.getRootPtr()->childrenPtrs[0]->addChild(23);
+  tree.getRootPtr()->childrenPtrs[0]->childrenPtrs[0]->addChild(42);
+  tree.getRootPtr()->addChild(15);
+ 
 }
 
 // treeFactoryTest: This function demonstrates the execution of treeFactory
@@ -323,9 +331,27 @@ std::vector<T> traverseLevels(GenericTree<T>& tree) {
   // the results vector. They should be placed in the vector in level order.
   // Remember that you can add a copy of an item to the back of a std::vector
   // with the .push_back() member function.
+  std::queue<TreeNode*> nodesToExplore;
 
-  // ...
+  nodesToExplore.push(rootNodePtr);
 
+  while (!nodesToExplore.empty()) {
+
+    TreeNode* topNode = nodesToExplore.front();
+    nodesToExplore.pop();
+
+    if (!topNode) {
+      // If the top node pointer is null, then we must not dereference it.
+      // then "continue" to jump back to the top of the loop.
+      continue;
+    }
+    results.push_back(topNode->data);
+  
+    for (auto childPtr : topNode->childrenPtrs) {
+      nodesToExplore.push(childPtr);
+    }
+    
+  }
   return results;
 }
 
