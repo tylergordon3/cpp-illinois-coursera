@@ -93,6 +93,53 @@ void LinkedList<T>::insertOrdered(const T& newData) {
   // base cases first, then walk the list from front to back and find
   // the earliest position where you should insert the new node.
   
+  Node* node = new Node(newData);
+
+  if (!head_)
+  {
+    head_ = node;
+    tail_ = node;
+    size_++;
+    return;
+  }
+  
+  if (head_->data > newData)
+  {
+    pushFront(newData);
+    delete node;
+    return;
+  }
+
+  Node* currNode = head_;
+  Node* prevNode = nullptr;
+  while(currNode->next)
+  {
+    prevNode = currNode;
+    currNode = currNode->next;
+   
+    if (node->data <= currNode->data)
+    {
+     
+      prevNode->next = node;
+      node->prev = prevNode;
+
+      currNode->prev = node;
+      node->next = currNode;
+      size_++;
+      return;
+    }
+
+    if (currNode->next == nullptr)
+    {
+      currNode->next = node;
+      node->prev = currNode;
+      node->next = nullptr;
+      tail_ = node;
+      size_++;
+      return;
+    }
+  }
+
   // When you insert the node, make sure to update any and all pointers
   // between it and adjacent nodes accordingly (next and prev pointers).
   // You may also need to update the head_ and tail_ pointers in some
@@ -233,6 +280,8 @@ LinkedList<T> LinkedList<T>::merge(const LinkedList<T>& other) const {
   // 1. Assuming that the left and right lists are already sorted, remember
   //    that the smallest items are already available at the front. You can
   //    access them immediately.
+
+  merged = mergeHelp(merged, left, right);
   // 2. Think of which item needs to be placed first in the merged list.
   //    Then think about what item should be placed second. You need to
   //    think carefully about which list to take from next after you take
@@ -255,4 +304,57 @@ LinkedList<T> LinkedList<T>::merge(const LinkedList<T>& other) const {
   // and an int.)
   return merged;
 }
+
+template <typename T>
+LinkedList<T> mergeHelp(LinkedList<T> merged, LinkedList<T> left, LinkedList<T> right) {
+  
+  if (!left.getHeadPtr() && !right.getHeadPtr())
+  {
+    // Both empty
+    return merged;
+  }
+  else if((!left.getHeadPtr() && right.getHeadPtr())) {
+    // Left empty, right non empty
+    LinkedList<T> right_t = right;
+    right_t.popFront();
+    merged = mergeHelp(merged,left,right_t);
+    merged.pushFront(right.getHeadPtr()->data);
+    right.popFront();
+    return merged;
+  } 
+  else if ((left.getHeadPtr() && !right.getHeadPtr())) {
+    // Left non empty, right empty
+    LinkedList<T> left_t = left;
+    left_t.popFront();
+    merged = mergeHelp(merged,left_t,right);
+    merged.pushFront(left.getHeadPtr()->data);
+    left.popFront();
+    return merged;
+  }
+
+  // Both contain values!
+  LinkedList<T> right_t = right;
+  LinkedList<T> left_t = left;
+
+  switch (right_t.getHeadPtr()->data < left_t.getHeadPtr()->data)
+  {
+    case true:
+      right_t.popFront();
+      merged = mergeHelp(merged, left, right_t);
+      merged.pushFront(right.getHeadPtr()->data);
+      right.popFront();
+      break;
+    case false:
+      left_t.popFront();
+      merged = mergeHelp(merged, left_t, right);
+      merged.pushFront(left.getHeadPtr()->data);
+      left.popFront();
+      break;
+  }
+
+  return merged;
+}
+
+
+
 

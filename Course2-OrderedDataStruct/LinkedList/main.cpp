@@ -51,6 +51,34 @@ void informalTests() {
   std::cout << "That will package the zip file properly for submission." << std::endl;
 
   {
+    std::cout << std::endl << "Merge:" << std::endl;
+    LinkedList<int> l;
+    LinkedList<int> r;
+
+    r.pushBack(3);
+    r.pushBack(4);
+    r.pushBack(5);
+    
+    LinkedList<int> mergey = l.merge(r);
+    std::cout << "merged1: " <<mergey << std::endl;
+    std::cout << "l: " << l << std::endl;
+    std::cout << "r: " << r << std::endl;
+
+    LinkedList<int> l2;
+    LinkedList<int> r2;
+    
+    l2.pushBack(3);
+    l2.pushBack(4);
+    l2.pushBack(5);
+    
+    LinkedList<int> mergey2 = l2.merge(r2);
+    std::cout << "merged2: " << mergey2 << std::endl;
+    std::cout << "l2: " << l2 << std::endl;
+    std::cout << "r2: " << r2 << std::endl;
+
+  }
+
+  {
     std::cout << std::endl << "Testing splitHalves():" << std::endl;
     LinkedList<int> l;
     l.pushBack(5);
